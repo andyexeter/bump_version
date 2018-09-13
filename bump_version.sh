@@ -7,7 +7,9 @@
 
 set -e
 
-. 
+dir=$(dirname `readlink -f $0`)
+
+. "$dir/bump_files.sh"
 
 function bump() {
 	echo -n "Updating $1..."
