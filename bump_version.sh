@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 
-# This script bumps version numbers in the following files:
-#	package.json - Bumps the version field.
+# Usage: ./bump_version.sh <major|minor|patch> - Increments the relevant version part by one.
 #
-# Usage: ./bin/bump-version.sh <major|minor|patch> - Increments the relevant version part by one.
-#
-# Usage 2: ./bin/bump-version.sh <version-from> <version-to>
-# 	e.g: ./bin/bump-version.sh 1.1.1 2.0
+# Usage 2: ./bump_version.sh <version-from> <version-to>
+# 	e.g: ./bump_version.sh 1.1.1 2.0
 
 set -e
 
 # Define which files to update and the pattern to look for
+# $1 Current version
+# $2 New version
 function bump_files() {
-	bump package.json "\"version\": \"$current_version\"" "\"version\": \"$new_version\""
+	bump package.json "\"version\": \"$1\"" "\"version\": \"$2\""
 	#bump README.md "my-plugin v$current_version" "my-plugin v$new_version"
 }
 
@@ -57,9 +56,12 @@ if [ "$1" == "major" ] || [ "$1" == "minor" ] || [ "$1" == "patch" ]; then
 	case "$1" in
 		"major")
 			major=$((major + 1))
+			minor=0
+			patch=0
 			;;
 		"minor")
 			minor=$((minor + 1))
+			patch=0
 			;;
 		"patch")
 			patch=$((patch + 1))
@@ -82,20 +84,24 @@ fi
 
 confirm "Bump version number from $current_version to $new_version?"
 
-bump_files
+bump_files "$current_version" "$new_version"
 
 grunt
 
-confirm "Publish v$new_version?"
+new_tag="v$new_version"
+
+confirm "Publish $new_tag?"
 
 echo "Committing changed files..."
 git add --all
 git commit -m "Bumped version to $new_version"
 
-echo "Adding new version tag: v$new_version..."
-git tag v"$new_version"
+echo "Adding new version tag: $new_tag..."
+git tag "$new_tag"
 
-echo "Pushing all branches and tags upstream..."
-git push --all
-git push --tags
+current_branch=$(git symbolic-ref --short HEAD)
 
+echo "Pushing branch $current_branch and tag $new_tag upstream..."
+git push "$current_branch $new_tag"
+
+npm publish
