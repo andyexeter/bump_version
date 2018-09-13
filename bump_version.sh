@@ -7,13 +7,7 @@
 
 set -e
 
-# Define which files to update and the pattern to look for
-# $1 Current version
-# $2 New version
-function bump_files() {
-	bump package.json "\"version\": \"$1\"" "\"version\": \"$2\""
-	#bump README.md "my-plugin v$current_version" "my-plugin v$new_version"
-}
+. 
 
 function bump() {
 	echo -n "Updating $1..."
