@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+new_tag="v$new_version"
+
+confirm "Create git tag $new_tag?"
+
+echo "Committing changed files..."
+git add --all
+git commit -m "Bumped version to $new_version"
+
+echo "Adding new version tag: $new_tag..."
+git tag "$new_tag"
+
+current_branch=$(git symbolic-ref --short HEAD)
+
+confirm "Push $current_branch and $new_tag upstream?"
+
+echo "Pushing branch $current_branch and tag $new_tag upstream..."
+git push "$current_branch $new_tag"

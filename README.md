@@ -23,6 +23,11 @@ Fine grained control:
 $ ./bump_version.sh <version-from> <version-to>
 ``` 
 
+## Hooks
+
+Add scripts to the hooks/prebump and hooks/postbump directories to have them executed before and after the version bump, respectively.
+Hook scripts must have a .hook extension.
+
 ## License
 
 Released under the [MIT license](LICENSE)

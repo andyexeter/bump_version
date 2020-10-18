@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo "Publishing $new_version to npm"
+
+npm publish
